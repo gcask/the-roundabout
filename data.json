@@ -1,0 +1,50 @@
+{
+    "teams": [
+        {
+            "members": ["Srezic", "StabbAmonte", "Shreebz"]
+        },
+        {
+            "members": ["BlackStout", "gcask", "Gerwulf"]
+        },
+        {
+            "members": ["Nyt0x", "DonBGS", "SupaFly"]
+        },
+        {
+            "members": ["Will", "DviseOne", "BeansProtege"]
+        }
+    ],
+
+    "ones": [[
+        {
+            "players": ["Srezic", "BlackStout"]
+        },
+        {
+            "players": ["Shreebz", "Gerwulf"]
+        },
+        {
+            "players": ["StabbAmonte", "DonBGS"]
+        },
+        {
+            "players": ["gcask", "DviseOne"],
+            "score": [0, 2]
+        },
+        {
+            "players": ["Nyt0x", "Will"]
+        },
+        {
+            "players": ["SupaFly", "BeansProtege"],
+            "score": [0, 2]
+        }
+    ]],
+
+    "twos": [
+        {
+            "pairs": [["BlackStout", "gcask"], ["StabbAmonte", "Shreebz"]],
+            "score": [1, 2]
+        },
+        {
+            "pairs": [["BlackStout", "gcask"], ["SupaFly", "Nyt0x"]],
+            "score": [1, 2]
+        }
+    ]
+}

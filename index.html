@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+    <title>The Roundabout</title>
+</head>
+
+<body>
+    <div class="loading loading-lg"></div>
+    <script src="https://unpkg.com/mithril/mithril.js"></script>
+    <script src="roundabout.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', (event) => {
+            m.route(event.currentTarget.body, "/teams", {
+                "/teams": {
+                    render: function () {
+                        return m(App, {dataUrl: "/data.json"}, m(Teams));
+                    }
+                },
+                "/3s": {
+                    render: function () {
+                        return m(App, {dataUrl: "/data.json"}, m(Threes));
+                    }
+                },
+                "/2s": {
+                    render: function () {
+                        return m(App, {dataUrl: "/data.json"}, m(Twos));
+                    }
+                },
+                "/1s": {
+                    render: function () {
+                        return m(App, {dataUrl: "/data.json"}, m(Ones));
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
