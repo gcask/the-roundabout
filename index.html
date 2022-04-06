@@ -19,22 +19,22 @@
             m.route(event.currentTarget.body, "/teams", {
                 "/teams": {
                     render: function () {
-                        return m(App, {dataUrl: "/data.json"}, m(Teams));
+                        return m(App, {dataUrl: window.location.pathname + "data.json"}, m(Teams));
                     }
                 },
                 "/3s": {
                     render: function () {
-                        return m(App, {dataUrl: "/data.json"}, m(Threes));
+                        return m(App, {dataUrl: window.location.pathname + "data.json"}, m(Threes));
                     }
                 },
                 "/2s": {
                     render: function () {
-                        return m(App, {dataUrl: "/data.json"}, m(Twos));
+                        return m(App, {dataUrl: window.location.pathname + "data.json"}, m(Twos));
                     }
                 },
                 "/1s": {
                     render: function () {
-                        return m(App, {dataUrl: "/data.json"}, m(Ones));
+                        return m(App, {dataUrl: window.location.pathname + "data.json"}, m(Ones));
                     }
                 }
             });
