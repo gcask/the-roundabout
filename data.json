@@ -39,12 +39,12 @@
 
     "twos": [
         {
-            "pairs": [["BlackStout", "gcask"], ["StabbAmonte", "Shreebz"]],
+            "pairs": [["BlackStout", "gcask"], ["Srezic", "Shreebz"]],
             "score": [1, 2]
         },
         {
-            "pairs": [["BlackStout", "gcask"], ["SupaFly", "Nyt0x"]],
-            "score": [1, 2]
+            "pairs": [["BlackStout", "Gerwulf"], ["Srezic", "Shreebz"]],
+            "score": [0, 2]
         }
     ]
 }
