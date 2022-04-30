@@ -4,11 +4,11 @@ let State = {
     twos: [],
     highlighted: "(none)",
 
-    load: function(url) {
+    load: function (url) {
         return m.request({
             method: "GET",
             url: url
-        }).then(function(result) {
+        }).then(function (result) {
             State.teams = result.teams;
             State.ones = result.ones;
             State.twos = result.twos;
@@ -78,7 +78,7 @@ const Twos = {
                         ]),
                         m("tr", [
                             m("th", { colspan: 2 }),
-                            all_but_last_teams.map(t => pairs.map(p => m("th", [showPlayer(t.members[p[0]]), " ",  showPlayer(t.members[p[1]])])))
+                            all_but_last_teams.map(t => pairs.map(p => m("th", [showPlayer(t.members[p[0]]), " ", showPlayer(t.members[p[1]])])))
                         ])
                     ),
                     all_but_first_teams.map((t, row) => m("tbody", pairs.map((p, i) => {
@@ -97,22 +97,22 @@ const Twos = {
                                 let match = undefined;
                                 let pairIdx = -1;
                                 let opponentIdx = -1;
-                             
+
                                 const classes = () => {
                                     if (row < col) {
-                                        return {class: "bg-gray"};
+                                        return { class: "bg-gray" };
                                     }
 
                                     if ([player_a, player_b, opponent_a, opponent_b].some(State.isHighlighted)) {
-                                        return {class: "bg-secondary text-center"};
+                                        return { class: "bg-secondary text-center" };
                                     }
 
-                                    return {class: "text-center"};
+                                    return { class: "text-center" };
                                 };
-                                
+
                                 if (row >= col) {
                                     const players = [player_a, player_b, opponent_a, opponent_b];
-                             
+
                                     match = State.twos.find(match => match.pairs.flat().every(player => players.includes(player)));
                                     if (match) {
                                         pairIdx = match.pairs.findIndex(pair => pair.includes(player_a));
@@ -151,7 +151,7 @@ const Ones = {
 
                     ]),
                     m("tbody", State.teams.map(t => [
-                        t.members.map(member => m("tr", State.isHighlighted(member) ? {class: "bg-secondary"} : {}, [
+                        t.members.map(member => m("tr", State.isHighlighted(member) ? { class: "bg-secondary" } : {}, [
                             m("td", showPlayer(member)),
                             State.ones.map((matches) => {
                                 const match = matches.find(match => match.players.includes(member));
@@ -163,7 +163,7 @@ const Ones = {
                                     m("td.text-center", 'score' in match ? (match.score[memberIdx] + " - " + match.score[opponentIdx]) : "")
                                 ];
                             })
-                            
+
                         ]))
                     ]))
                 ])
@@ -177,7 +177,7 @@ const App = {
         State.load(vnode.attrs.dataUrl);
     },
     view: function (vnode) {
-        const highlighter = function (value) { return State.isHighlighted(value) ? {value: value, selected: true} : {value: value}; };
+        const highlighter = function (value) { return State.isHighlighted(value) ? { value: value, selected: true } : { value: value }; };
         const nav_link = function (link) { return { class: "btn-lg btn btn-" + (m.route.get() == link ? "primary" : "link"), href: link }; };
         return [
             m("header.navbar", [
@@ -192,7 +192,7 @@ const App = {
                 ]),
                 m("section.navbar-section", [
                     m(".input-group.input-inline", [
-                        m("select.form-select", {onchange: function (e) { State.highlight(e.target.value); }}, [
+                        m("select.form-select", { onchange: function (e) { State.highlight(e.target.value); } }, [
                             m("option", highlighter("(none)"), "(no player highlighted)"),
                             State.teams.map(team => team.members.map(member => m("option", highlighter(member), member)))
                         ]),
