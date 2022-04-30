@@ -22,6 +22,102 @@ function showPlayer(player) {
     return State.isHighlighted(player) ? m("mark", player) : player;
 };
 
+const trophyIcon = () => m.trust("&#x1F3C6;");
+
+const Standings = {
+    view: function (vnode) {
+        const POINTS = {
+            ONES: 9,
+            TWOS: 5,
+            THREES: 45
+        };
+        // Each row:
+        // <Team players> <1s> <2s> <3s> <Total>
+        // Sort by total.
+        let team_scores = State.teams.map(t => { return { members: t.members, ones: 0, twos: 0, threes: 0, total: function () { return this.ones + this.twos + this.threes; } }; });
+        for (const round of State.ones) {
+            for (const match of round) {
+                if ('score' in match) {
+                    // Identify winner.
+                    let winner = match.players[match.score[0] > match.score[1] ? 0 : 1];
+                    // Find team, add score.
+                    const team_index = team_scores.findIndex(ts => ts.members.includes(winner));
+                    team_scores[team_index].ones += POINTS.ONES;
+                }
+            }
+        }
+
+        for (const match of State.twos) {
+            // Identify winner (any player from the winning pair)
+            let winner = match.pairs[match.score[0] > match.score[1] ? 0 : 1][0];
+            // Find team, add score.
+            const team_index = team_scores.findIndex(ts => ts.members.includes(winner));
+            team_scores[team_index].twos += POINTS.TWOS;
+        }
+
+        // Need a custom sort to get descending.
+        // First by total, then by 3s/2s/1s.
+        team_scores.sort((lhs, rhs) => {
+            const lhsTotal = lhs.total();
+            const rhsTotal = rhs.total();
+            if (lhsTotal == rhsTotal) {
+                if (lhs.threes == rhs.threes) {
+                    if (lhs.twos == rhs.twos) {
+                        return lhs.ones < rhs.ones;
+                    }
+
+                    return lhs.twos < rhs.twos;
+                }
+
+                return rhs.threes < lhs.threes;
+            }
+
+            return lhsTotal < rhsTotal;
+        });
+
+        let best1v1Idx = 0;
+        let best2v2Idx = 0;
+        let best3v3Idx = 0;
+
+        team_scores.forEach((scores, idx) => {
+            if (scores.ones > team_scores[best1v1Idx].ones) {
+                best1v1Idx = idx;
+            }
+
+            if (scores.twos > team_scores[best2v2Idx].twos) {
+                best2v2Idx = idx;
+            }
+
+            if (scores.threes > team_scores[best3v3Idx].threes) {
+                best3v3Idx = idx;
+            }
+        })
+
+        return m(".column",
+            m("table.table.table-striped.table-hover", [
+                m("thead",
+                    m("tr", [
+                        m("th", { colspan: 4 }, "Team"),
+                        m("th.text-right", "1v1"),
+                        m("th.text-right", "2v2"),
+                        m("th.text-right", "3v3"),
+                        m("th.text-right", "Total"),
+                    ])
+                ),
+                m("tbody", team_scores.map((team_score, i) => m("tr",
+                    m("td", (i == 0) ? m("strong", trophyIcon(), (i + 1)) : (i + 1)),
+                    team_score.members.map(x => m("td", showPlayer(x))),
+                    m("td.text-right", i == best1v1Idx && team_score.ones > 0 ? m("strong", trophyIcon(), team_score.ones) : team_score.ones),
+                    m("td.text-right", i == best2v2Idx && team_score.twos > 0 ? m("strong", trophyIcon(), team_score.twos) : team_score.twos),
+                    m("td.text-right", i == best3v3Idx && team_score.threes > 0 ? m("strong", trophyIcon(), team_score.threes) : team_score.threes),
+                    m("td.text-right", (i == 0) ? m("strong", trophyIcon(), team_score.total()) : team_score.total())
+                ))),
+                m("caption", m("h1", "Standings"))
+            ])
+        );
+    }
+};
+
 const Team = {
     view: function (vnode) {
         return m(".card.team", [
@@ -34,7 +130,10 @@ const Team = {
 
 const Teams = {
     view: function (vnode) {
-        return m(".columns", State.teams.map(t => m(".column.col-lg-3.col-md-6.col-sm-12", m(Team, t))));
+        return [
+            m("section.columns", State.teams.map(t => m(".column.col-lg-3.col-md-6.col-sm-12", m(Team, t)))),
+            m("section.columns", m(Standings))
+        ];
     }
 };
 
