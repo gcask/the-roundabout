@@ -19,7 +19,8 @@
             "players": ["Srezic", "BlackStout"]
         },
         {
-            "players": ["Shreebz", "Gerwulf"]
+            "players": ["Shreebz", "Gerwulf"],
+            "score": [2, 0]
         },
         {
             "players": ["StabbAmonte", "DonBGS"]
