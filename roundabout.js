@@ -19,10 +19,11 @@ let State = {
 };
 
 function showPlayer(player) {
-    return State.isHighlighted(player) ? m("mark", player) : player;
+    return State.isHighlighted(player) ? m("mark", m("strong", player.toUpperCase())) : player;
 };
 
 const trophyIcon = () => m.trust("&#x1F3C6;");
+const zapIcon = () => m.trust("&#x26A1;");
 
 const Standings = {
     view: function (vnode) {
@@ -271,6 +272,96 @@ const Ones = {
     }
 };
 
+const Schedule = {
+    view: function(vnode) {
+        return m(".columns", [
+            m("section.column.col-6.col-md-12", [
+                m(".columns", [
+                    m(".column", this.ones())
+                ]),
+            ]),
+
+            m("section.column.col-6.col-md-12", [
+                m(".columns", [
+                    m(".column", this.twos())
+                ])
+            ])
+        ])
+    },
+
+    ones: function() {
+        // For each element of current round
+        // (last in array), find remaining ones.
+        const ones = (State.ones.length > 0 ? State.ones[State.ones.length - 1] : []).filter((match) => !('score' in match));
+        return [
+            m("h2", "1v1"),
+            m("ul", ones.map((match) => m("li", [showPlayer(match.players[0]), zapIcon(), showPlayer(match.players[1])])))
+        ];
+    },
+
+    twos: function() {
+        
+
+        let twos = [];
+
+        if (State.teams.length > 1) {
+            // For each pair, find the first match without a score.
+            // Gives one match per pair.
+            let available_pairs = {};
+            for (let i = 0; i < State.teams.length; ++i) {
+                available_pairs[i] = [[0, 1], [0, 2], [1, 2]];
+            }
+
+            for (let i = 0;  i < State.teams.length - 1; ++i) {
+                const homeTeam = State.teams[i];
+                for (const homePair of available_pairs[i]) {
+                    const homePlayerA = homeTeam.members[homePair[0]];
+                    const homePlayerB = homeTeam.members[homePair[1]];
+                    let matchmaked = false;
+                    for (let j = i + 1; j < State.teams.length && !matchmaked; ++j) {
+                        const awayTeam = State.teams[j];
+                        let awayPairs = available_pairs[j];
+                        for (let k = 0; k < awayPairs.length && !matchmaked; ++k) {
+                            const awayPair = awayPairs[k];
+                            const awayPlayerA = awayTeam.members[awayPair[0]];
+                            const awayPlayerB = awayTeam.members[awayPair[1]]; 
+                            // Is this still a match to play?
+                            const players = [homePlayerA, homePlayerB, awayPlayerA, awayPlayerB];
+                            if (!State.twos.some(match => match.pairs.flat().every(player => players.includes(player)))) {
+                                // Yes!
+                                // Make the opponent pair unavailable, move on to next.
+                                twos.push([[homePlayerA, homePlayerB], [awayPlayerA, awayPlayerB]]);
+                                available_pairs[j].splice(k, 1);
+                                matchmaked = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return [
+            m("h2", "2v2"),
+            twos.map((match) => m(".columns", [
+                // homeA & homeB
+                m(".column.col-2.col-lg-auto", showPlayer(match[0][0])),
+                m(".column.col-1.hide-xl", m.trust("&amp;")),
+                m(".column.col-2.col-lg-auto", showPlayer(match[0][1])),
+                
+                // <zap>
+                m(".column.col-2.col-lg-auto.text-center", zapIcon()),
+
+                // awayA & awayB
+                m(".column.col-2.col-lg-auto", showPlayer(match[1][0])),
+                m(".column.col-1.hide-xl", m.trust("&amp;")),
+                m(".column.col-2.col-lg-auto", showPlayer(match[1][1])),
+
+                // -------------- (divider)
+                m(".column.hide-md.divider")
+            ]))
+        ]
+    }
+};
+
 const App = {
     oninit: function (vnode) {
         State.load(vnode.attrs.dataUrl);
@@ -288,6 +379,7 @@ const App = {
                     m(m.route.Link, nav_link("/3s"), "3v3"),
                     m(m.route.Link, nav_link("/2s"), "2v2"),
                     m(m.route.Link, nav_link("/1s"), "1v1"),
+                    m(m.route.Link, nav_link("/schedule"), "Schedule"),
                 ]),
                 m("section.navbar-section", [
                     m(".input-group.input-inline", [

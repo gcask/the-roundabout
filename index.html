@@ -14,7 +14,7 @@
     <script src="roundabout.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', (event) => {
-            m.route(event.currentTarget.body, "/teams", {
+            m.route(event.currentTarget.body, "/schedule", {
                 "/teams": {
                     render: function () {
                         return m(App, {dataUrl: window.location.pathname + "data.json"}, m(Teams));
@@ -33,6 +33,11 @@
                 "/1s": {
                     render: function () {
                         return m(App, {dataUrl: window.location.pathname + "data.json"}, m(Ones));
+                    }
+                },
+                "/schedule": {
+                    render: function () {
+                        return m(App, {dataUrl: window.location.pathname + "data.json"}, m(Schedule));
                     }
                 }
             });
