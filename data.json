@@ -16,7 +16,8 @@
 
     "ones": [[
         {
-            "players": ["Srezic", "BlackStout"]
+            "players": ["Srezic", "BlackStout"],
+            "score": [0, 2]
         },
         {
             "players": ["Shreebz", "Gerwulf"],
