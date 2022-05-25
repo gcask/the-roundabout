@@ -256,13 +256,34 @@ const Ones = {
                             m("td", showPlayer(member)),
                             State.ones.map((matches) => {
                                 const match = matches.find(match => match.players.includes(member));
-                                const memberIdx = match.players.indexOf(member);
-                                const opponentIdx = (memberIdx + 1) % 2;
+                                if (match !== undefined) {
+                                    const memberIdx = match.players.indexOf(member);
+                                    const opponentIdx = (memberIdx + 1) % 2;
 
-                                return [
-                                    m("td.text-center", showPlayer(match.players[opponentIdx])),
-                                    m("td.text-center", 'score' in match ? (match.score[memberIdx] + " - " + match.score[opponentIdx]) : "")
-                                ];
+                                    return [
+                                        m("td.text-center", showPlayer(match.players[opponentIdx])),
+                                        m("td.text-center", 'score' in match ? (match.score[memberIdx] + " - " + match.score[opponentIdx]) : "")
+                                    ];
+                                }
+                                else {
+                                    // Match is pending winner/loser of previous round.
+                                    const possibleOpponents = matches.filter(match => match.players.some((player) => player.includes(member)))
+                                        .map((match, idx) => {
+                                            const memberIdx = match.players.indexOf(member);
+                                            const opponentIdx = (memberIdx + 1) % 2;
+                                            if (idx > 0) {
+                                                return [" or ", showPlayer(match.players[opponentIdx])];
+                                            }
+                                            else {
+                                                return showPlayer(match.players[opponentIdx]);
+                                            }
+                                        });
+                                    return [
+                                        m("td.text-center", possibleOpponents),
+                                        m("td.text-center", "")
+                                    ];
+                                }
+
                             })
 
                         ]))
@@ -274,7 +295,7 @@ const Ones = {
 };
 
 const Schedule = {
-    view: function(vnode) {
+    view: function (vnode) {
         return m(".columns", [
             m("section.column.col-6.col-md-12", [
                 m(".columns", [
@@ -290,7 +311,7 @@ const Schedule = {
         ])
     },
 
-    ones: function() {
+    ones: function () {
         return [
             m("h2", "1v1"),
             State.ones.map((matches, round) => {
@@ -305,8 +326,8 @@ const Schedule = {
         ];
     },
 
-    twos: function() {
-        
+    twos: function () {
+
 
         let twos = [];
 
@@ -318,7 +339,7 @@ const Schedule = {
                 available_pairs[i] = [[0, 1], [0, 2], [1, 2]];
             }
 
-            for (let i = 0;  i < State.teams.length - 1; ++i) {
+            for (let i = 0; i < State.teams.length - 1; ++i) {
                 const homeTeam = State.teams[i];
                 for (const homePair of available_pairs[i]) {
                     const homePlayerA = homeTeam.members[homePair[0]];
@@ -330,7 +351,7 @@ const Schedule = {
                         for (let k = 0; k < awayPairs.length && !matchmaked; ++k) {
                             const awayPair = awayPairs[k];
                             const awayPlayerA = awayTeam.members[awayPair[0]];
-                            const awayPlayerB = awayTeam.members[awayPair[1]]; 
+                            const awayPlayerB = awayTeam.members[awayPair[1]];
                             // Is this still a match to play?
                             const players = [homePlayerA, homePlayerB, awayPlayerA, awayPlayerB];
                             if (!State.twos.some(match => match.pairs.flat().every(player => players.includes(player)))) {
@@ -352,7 +373,7 @@ const Schedule = {
                 m(".column.col-2.col-lg-auto", showPlayer(match[0][0])),
                 m(".column.col-1.hide-xl", m.trust("&amp;")),
                 m(".column.col-2.col-lg-auto", showPlayer(match[0][1])),
-                
+
                 // <zap>
                 m(".column.col-2.col-lg-auto.text-center", zapIcon()),
 
