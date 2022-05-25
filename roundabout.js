@@ -24,6 +24,7 @@ function showPlayer(player) {
 
 const trophyIcon = () => m.trust("&#x1F3C6;");
 const zapIcon = () => m.trust("&#x26A1;");
+const medalIcon = () => m.trust("&#1F3C5;");
 
 const Standings = {
     view: function (vnode) {
@@ -108,9 +109,9 @@ const Standings = {
                 m("tbody", team_scores.map((team_score, i) => m("tr",
                     m("td", (i == 0) ? m("strong", trophyIcon(), (i + 1)) : (i + 1)),
                     team_score.members.map(x => m("td", showPlayer(x))),
-                    m("td.text-right", i == best1v1Idx && team_score.ones > 0 ? m("strong", trophyIcon(), team_score.ones) : team_score.ones),
-                    m("td.text-right", i == best2v2Idx && team_score.twos > 0 ? m("strong", trophyIcon(), team_score.twos) : team_score.twos),
-                    m("td.text-right", i == best3v3Idx && team_score.threes > 0 ? m("strong", trophyIcon(), team_score.threes) : team_score.threes),
+                    m("td.text-right", i == best1v1Idx && team_score.ones > 0 ? m("strong", medalIcon(), team_score.ones) : team_score.ones),
+                    m("td.text-right", i == best2v2Idx && team_score.twos > 0 ? m("strong", medalIcon(), team_score.twos) : team_score.twos),
+                    m("td.text-right", i == best3v3Idx && team_score.threes > 0 ? m("strong", medalIcon(), team_score.threes) : team_score.threes),
                     m("td.text-right", (i == 0) ? m("strong", trophyIcon(), team_score.total()) : team_score.total())
                 ))),
                 m("caption", m("h1", "Standings"))
