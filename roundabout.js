@@ -24,7 +24,7 @@ function showPlayer(player) {
 
 const trophyIcon = () => m.trust("&#x1F3C6;");
 const zapIcon = () => m.trust("&#x26A1;");
-const medalIcon = () => m.trust("&#1F3C5;");
+const medalIcon = () => m.trust("&#x1F3C5;");
 
 const Standings = {
     view: function (vnode) {
