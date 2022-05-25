@@ -291,12 +291,17 @@ const Schedule = {
     },
 
     ones: function() {
-        // For each element of current round
-        // (last in array), find remaining ones.
-        const ones = (State.ones.length > 0 ? State.ones[State.ones.length - 1] : []).filter((match) => !('score' in match));
         return [
             m("h2", "1v1"),
-            m("ul", ones.map((match) => m("li", [showPlayer(match.players[0]), zapIcon(), showPlayer(match.players[1])])))
+            State.ones.map((matches, round) => {
+                const remaining = matches.filter((match) => !('score' in match));
+                if (remaining.length > 0) {
+                    return [
+                        m("h3", "Round " + (round + 1)),
+                        m("ul", remaining.map((match) => m("li", [showPlayer(match.players[0]), zapIcon(), showPlayer(match.players[1])])))
+                    ];
+                }
+            })
         ];
     },
 
