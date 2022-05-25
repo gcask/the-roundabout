@@ -38,6 +38,26 @@
             "players": ["SupaFly", "BeansProtege"],
             "score": [0, 2]
         }
+    ],
+    [
+        {
+            "players": ["BlackStout", "DviseOne"]
+        },
+        {
+            "players": ["Nyt0x", "Shreebz"]
+        },
+        {
+            "players": ["BeansProtege", "Winner of StabbAmonte/DonBGS"]
+        },
+        {
+            "players": ["Srezic", "Will"]
+        },
+        {
+            "players": ["gcask", "Loser of StabbAmonte/DonBGS"]
+        },
+        {
+            "players": ["Gerwulf", "SupaFly"]
+        }
     ]],
 
     "twos": [
