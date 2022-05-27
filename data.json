@@ -76,6 +76,10 @@
         {
             "pairs": [["BlackStout", "Gerwulf"], ["Srezic", "StabbAmonte"]],
             "score": [2, 1]
+        },
+        {
+            "pairs": [["gcask", "Gerwulf"], ["Srezic", "StabbAmonte"]],
+            "score": [1, 2]
         }
     ]
 }
