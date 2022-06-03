@@ -391,6 +391,7 @@ const Schedule = {
 const App = {
     oninit: function (vnode) {
         State.load(vnode.attrs.dataUrl);
+        vnode.state.navbarExpanded = false;
     },
     view: function (vnode) {
         const highlighter = function (value) { return State.isHighlighted(value) ? { value: value, selected: true } : { value: value }; };
@@ -400,16 +401,12 @@ const App = {
                 m(".navbar-brand", [
                     m(".navbar-item", "The Roundabout"),
                     
-                    m("a.navbar-burger", {'data-target': 'navbarMenu', onclick: function(e) { 
-                        document.getElementById(e.target.dataset.target).classList.toggle("is-active");
-                        e.target.classList.toggle("is-active");
-                        e.preventDefault();
-                    }}, [
-                        m("span"), m("span"), m("span")
-                    ])
+                    m("a.navbar-burger" + (vnode.state.navbarExpanded ? ".is-active" : ""), {'data-target': 'navbarMenu', onclick: function() { 
+                        vnode.state.navbarExpanded = !vnode.state.navbarExpanded;
+                    }}, [ m("span"), m("span"), m("span") ])
                 ]),
                 
-                m("#navbarMenu.navbar-menu", [
+                m(".navbar-menu"  + (vnode.state.navbarExpanded ? ".is-active" : ""), [
                     m(".navbar-start", [
                         m(m.route.Link, nav_link("/teams"), "Teams"),
                         m(m.route.Link, nav_link("/3s"), "3v3"),
