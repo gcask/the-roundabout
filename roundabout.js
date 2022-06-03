@@ -399,6 +399,7 @@ const App = {
                     m("a.navbar-burger", {'data-target': 'navbarMenu', onclick: function(e) { 
                         document.getElementById(e.target.dataset.target).classList.toggle("is-active");
                         e.target.classList.toggle("is-active");
+                        e.preventDefault();
                     }}, [
                         m("span"), m("span"), m("span")
                     ])
