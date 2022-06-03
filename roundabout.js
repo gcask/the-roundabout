@@ -19,7 +19,7 @@ let State = {
 };
 
 function showPlayer(player) {
-    return State.isHighlighted(player) ? m("mark", m("strong", player.toUpperCase())) : player;
+    return State.isHighlighted(player) ? m("mark", m("strong.is-uppercase", player)) : player;
 };
 
 const trophyIcon = () => m.trust("&#x1F3C6;");
@@ -95,26 +95,26 @@ const Standings = {
             }
         })
 
-        return m(".column",
-            m("table.table.table-striped.table-hover", [
+        return m(".column.table-container",
+            m("table.table.is-striped.is-hoverable.is-fullwidth", [
                 m("thead",
                     m("tr", [
                         m("th", { colspan: 4 }, "Team"),
-                        m("th.text-right", "1v1"),
-                        m("th.text-right", "2v2"),
-                        m("th.text-right", "3v3"),
-                        m("th.text-right", "Total"),
+                        m("th.has-text-right", "1v1"),
+                        m("th.has-text-right", "2v2"),
+                        m("th.has-text-right", "3v3"),
+                        m("th.has-text-right", "Total"),
                     ])
                 ),
                 m("tbody", team_scores.map((team_score, i) => m("tr",
                     m("td", (i == 0) ? m("strong", trophyIcon(), (i + 1)) : (i + 1)),
                     team_score.members.map(x => m("td", showPlayer(x))),
-                    m("td.text-right", i == best1v1Idx && team_score.ones > 0 ? m("strong", medalIcon(), team_score.ones) : team_score.ones),
-                    m("td.text-right", i == best2v2Idx && team_score.twos > 0 ? m("strong", medalIcon(), team_score.twos) : team_score.twos),
-                    m("td.text-right", i == best3v3Idx && team_score.threes > 0 ? m("strong", medalIcon(), team_score.threes) : team_score.threes),
-                    m("td.text-right", (i == 0) ? m("strong", trophyIcon(), team_score.total()) : team_score.total())
+                    m("td.has-text-right", i == best1v1Idx && team_score.ones > 0 ? m("strong", medalIcon(), team_score.ones) : team_score.ones),
+                    m("td.has-text-right", i == best2v2Idx && team_score.twos > 0 ? m("strong", medalIcon(), team_score.twos) : team_score.twos),
+                    m("td.has-text-right", i == best3v3Idx && team_score.threes > 0 ? m("strong", medalIcon(), team_score.threes) : team_score.threes),
+                    m("td.has-text-right", (i == 0) ? m("strong", trophyIcon(), team_score.total()) : team_score.total())
                 ))),
-                m("caption", m("h1", "Standings"))
+                m("caption.has-text-left", m("h1.title", "Standings"))
             ])
         );
     }
@@ -123,8 +123,8 @@ const Standings = {
 const Team = {
     view: function (vnode) {
         return m(".card.team", [
-            m(".card-header", m("h2.card-title", showPlayer(vnode.attrs.members[0]))),
-            m("ul.card-body", vnode.attrs.members.slice(1).map(x => m("li", showPlayer(x)))),
+            m("header.card-header", m("h2.card-header-title", ["Team ", showPlayer(vnode.attrs.members[0])])),
+            m("ul.card-content", vnode.attrs.members.map(x => m("li", showPlayer(x)))),
             m(".card-footer")
         ]);
     }
@@ -133,7 +133,10 @@ const Team = {
 const Teams = {
     view: function (vnode) {
         return [
-            m("section.columns", State.teams.map(t => m(".column.col-lg-3.col-md-6.col-sm-12", m(Team, t)))),
+            m("section", [
+                m("h1.title", "Teams"),
+                m(".columns", State.teams.map(t => m(".column", m(Team, t))))
+            ]),
             m("section.columns", m(Standings))
         ];
     }
@@ -145,17 +148,17 @@ const Threes = {
         const all_but_last_teams = State.teams.slice(0, -1);
         return m(".columns", [
             m(".column", [
-                m("table.table", [
-                    m("caption", m("h2", "First Bo3")),
-                    m("thead.text-center",
+                m("table.table.is-striped.is-hoverable.is-fullwidth", [
+                    m("caption", m("h2.title", "First Bo3")),
+                    m("thead",
                         m("tr", [
                             m("th"),
-                            all_but_last_teams.map(t => m("th", showPlayer(t.members[0])))
+                            all_but_last_teams.map(t => m("th", ["Team ", showPlayer(t.members[0])]))
                         ])
                     ),
                     m("tbody", all_but_first_teams.map((t, row) => m("tr", [
-                        m("th", showPlayer(t.members[0])),
-                        all_but_last_teams.map((t, col) => m("td", { "class": row < col ? "bg-gray" : "" }))
+                        m("th", ["Team ", showPlayer(t.members[0])]),
+                        all_but_last_teams.map((t, col) => m("td", { "class": row < col ? "has-background-grey" : "" }))
                     ])))
                 ])
             ])
@@ -168,18 +171,18 @@ const Twos = {
         const pairs = [[0, 1], [0, 2], [1, 2]];
         const all_but_first_teams = State.teams.slice(1);
         const all_but_last_teams = State.teams.slice(0, -1);
-        return m(".columns", [
-            m(".column.col-12", [
-                m("table.table.table-scroll", [
-                    m("caption", m("h2", "Round-robin Bo3")),
-                    m("thead.text-center",
+        return m(".columns.", [
+            m(".column.table-container", [
+                m("table.table.is-hoverable.is-fullwidth", [
+                    m("caption", m("h2.title", "Round-robin Bo3")),
+                    m("thead",
                         m("tr", [
                             m("th", { colspan: 2 }),
-                            all_but_last_teams.map(t => m("th", { colspan: 3 }, ["Team ", showPlayer(t.members[0])]))
+                            all_but_last_teams.map(t => m("th.has-text-centered", { colspan: 3 }, ["Team ", showPlayer(t.members[0])]))
                         ]),
                         m("tr", [
                             m("th", { colspan: 2 }),
-                            all_but_last_teams.map(t => pairs.map(p => m("th", [showPlayer(t.members[p[0]]), " ", showPlayer(t.members[p[1]])])))
+                            all_but_last_teams.map(t => pairs.map(p => m("th.has-text-centered", [showPlayer(t.members[p[0]]), " ", showPlayer(t.members[p[1]])])))
                         ])
                     ),
                     all_but_first_teams.map((t, row) => m("tbody", pairs.map((p, i) => {
@@ -201,14 +204,14 @@ const Twos = {
 
                                 const classes = () => {
                                     if (row < col) {
-                                        return { class: "bg-gray" };
+                                        return { class: "has-background-grey" };
                                     }
 
                                     if ([player_a, player_b, opponent_a, opponent_b].some(State.isHighlighted)) {
-                                        return { class: "bg-secondary text-center" };
+                                        return { class: "is-selected has-text-centered has-text-weight-bold" };
                                     }
 
-                                    return { class: "text-center" };
+                                    return { class: "has-text-centered" };
                                 };
 
                                 if (row >= col) {
@@ -235,24 +238,24 @@ const Twos = {
 const Ones = {
     view: function (vnode) {
         return m(".columns", [
-            m(".column.col-12", [
-                m("table.table.table-striped", [
+            m(".column.table-container", [
+                m("table.table.is-striped.is-hoverable.is-fullwidth", [
                     m("thead", [
                         m("tr", [
                             m("th"), // Player
-                            State.ones.map((_, i) => m("th.text-center", { "colspan": 2 }, "Round " + (i + 1)))
+                            State.ones.map((_, i) => m("th.has-text-centered", { "colspan": 2 }, "Round " + (i + 1)))
                         ]),
                         m("tr", [
                             m("th", "Player"),
                             State.ones.map(() => [
-                                m("th.text-center", "Opponent"),
-                                m("th.text-center", "Result")
+                                m("th", "Opponent"),
+                                m("th.has-text-right", "Result")
                             ])
                         ]),
 
                     ]),
                     m("tbody", State.teams.map(t => [
-                        t.members.map(member => m("tr", State.isHighlighted(member) ? { class: "bg-secondary" } : {}, [
+                        t.members.map(member => m("tr", State.isHighlighted(member) ? { class: "is-selected has-text-weight-bold" } : {}, [
                             m("td", showPlayer(member)),
                             State.ones.map((matches) => {
                                 const match = matches.find(match => match.players.includes(member));
@@ -261,8 +264,8 @@ const Ones = {
                                     const opponentIdx = (memberIdx + 1) % 2;
 
                                     return [
-                                        m("td.text-center", showPlayer(match.players[opponentIdx])),
-                                        m("td.text-center", 'score' in match ? (match.score[memberIdx] + " - " + match.score[opponentIdx]) : "")
+                                        m("td", showPlayer(match.players[opponentIdx])),
+                                        m("td.has-text-right", 'score' in match ? (match.score[memberIdx] + " - " + match.score[opponentIdx]) : "")
                                     ];
                                 }
                                 else {
@@ -279,8 +282,8 @@ const Ones = {
                                             }
                                         });
                                     return [
-                                        m("td.text-center", possibleOpponents),
-                                        m("td.text-center", "")
+                                        m("td", possibleOpponents),
+                                        m("td", "")
                                     ];
                                 }
 
@@ -297,33 +300,30 @@ const Ones = {
 const Schedule = {
     view: function (vnode) {
         return m(".columns", [
-            m("section.column.col-6.col-md-12", [
-                m(".columns", [
-                    m(".column", this.ones())
-                ]),
-            ]),
-
-            m("section.column.col-6.col-md-12", [
-                m(".columns", [
-                    m(".column", this.twos())
-                ])
-            ])
+            m("section.column",  this.ones()),
+            m("section.column", this.twos())
         ])
     },
 
     ones: function () {
-        return [
-            m("h2", "1v1"),
-            State.ones.map((matches, round) => {
-                const remaining = matches.filter((match) => !('score' in match));
-                if (remaining.length > 0) {
-                    return [
-                        m("h3", "Round " + (round + 1)),
-                        m("ul", remaining.map((match) => m("li", [showPlayer(match.players[0]), zapIcon(), showPlayer(match.players[1])])))
-                    ];
-                }
-            })
-        ];
+        return m(".card", [
+            m("header.card-header", m("h2.title.card-header-title", "1v1")),
+            m(".card-content",
+                State.ones.map((matches, round) => {
+                    const remaining = matches.filter((match) => !('score' in match));
+                    if (remaining.length > 0) {
+                        return m("section.section", [
+                            m("h3.title", "Round " + (round + 1)),
+                            remaining.map((match) => m("ul.columns.is-mobile", [
+                                m("li.column", showPlayer(match.players[0])),
+                                m("li.column.has-text-centered", zapIcon()),
+                                m("li.column.has-text-right", showPlayer(match.players[1]))
+                            ]))
+                        ]);
+                    }
+                })
+            )
+        ]);
     },
 
     twos: function () {
@@ -366,26 +366,21 @@ const Schedule = {
                 }
             }
         }
-        return [
-            m("h2", "2v2"),
-            twos.map((match) => m(".columns", [
+        return m(".card", [
+            m("header.card-header", m("h2.title.card-header-title", "2v2")),
+            m(".card-content",  twos.map((match) => m(".columns.is-mobile", [
                 // homeA & homeB
-                m(".column.col-2.col-lg-auto", showPlayer(match[0][0])),
-                m(".column.col-1.hide-xl", m.trust("&amp;")),
-                m(".column.col-2.col-lg-auto", showPlayer(match[0][1])),
+                m(".column.has-text-right", showPlayer(match[0][0])),
+                m(".column", showPlayer(match[0][1])),
 
                 // <zap>
-                m(".column.col-2.col-lg-auto.text-center", zapIcon()),
+                m(".column.is-1", zapIcon()),
 
                 // awayA & awayB
-                m(".column.col-2.col-lg-auto", showPlayer(match[1][0])),
-                m(".column.col-1.hide-xl", m.trust("&amp;")),
-                m(".column.col-2.col-lg-auto", showPlayer(match[1][1])),
-
-                // -------------- (divider)
-                m(".column.hide-md.divider")
-            ]))
-        ]
+                m(".column.has-text-right", showPlayer(match[1][0])),
+                m(".column", showPlayer(match[1][1])),
+            ])))
+        ]);
     }
 };
 
@@ -395,27 +390,38 @@ const App = {
     },
     view: function (vnode) {
         const highlighter = function (value) { return State.isHighlighted(value) ? { value: value, selected: true } : { value: value }; };
-        const nav_link = function (link) { return { class: "btn-lg btn btn-" + (m.route.get() == link ? "primary" : "link"), href: link }; };
+        const nav_link = function (link) { return { class: "navbar-item " + (m.route.get() == link ? "has-text-link has-background-link-light": ""), href: link }; };
         return [
-            m("header.navbar", [
-                m("section.navbar-section", [
-                    m("strong.navbar-brand.mr-2", "The Roundabout"),
-                    m(m.route.Link, nav_link("/teams"), "Teams"),
-                ]),
-                m("section.navbar-center", [
-                    m(m.route.Link, nav_link("/3s"), "3v3"),
-                    m(m.route.Link, nav_link("/2s"), "2v2"),
-                    m(m.route.Link, nav_link("/1s"), "1v1"),
-                    m(m.route.Link, nav_link("/schedule"), "Schedule"),
-                ]),
-                m("section.navbar-section", [
-                    m(".input-group.input-inline", [
-                        m("select.form-select", { onchange: function (e) { State.highlight(e.target.value); } }, [
-                            m("option", highlighter("(none)"), "(no player highlighted)"),
-                            State.teams.map(team => team.members.map(member => m("option", highlighter(member), member)))
-                        ]),
+            m("nav.navbar", [
+                m(".navbar-brand", [
+                    m(".navbar-item", "The Roundabout"),
+                    
+                    m("a.navbar-burger", {'data-target': 'navbarMenu', onclick: function(e) { 
+                        document.getElementById(e.target.dataset.target).classList.toggle("is-active");
+                        e.target.classList.toggle("is-active");
+                    }}, [
+                        m("span"), m("span"), m("span")
                     ])
-                ])
+                ]),
+                
+                m("#navbarMenu.navbar-menu", [
+                    m(".navbar-start", [
+                        m(m.route.Link, nav_link("/teams"), "Teams"),
+                        m(m.route.Link, nav_link("/3s"), "3v3"),
+                        m(m.route.Link, nav_link("/2s"), "2v2"),
+                        m(m.route.Link, nav_link("/1s"), "1v1"),
+                        m(m.route.Link, nav_link("/schedule"), "Schedule")
+                    ]),
+                    m(".navbar-end", [
+                        m(".select", [
+                            m("select", { onchange: function (e) { State.highlight(e.target.value); } }, [
+                                m("option", highlighter("(none)"), "(no player highlighted)"),
+                                State.teams.map(team => team.members.map(member => m("option", highlighter(member), member)))
+                            ]),
+                        ])
+                    ])
+                ]),
+                
             ]),
             m(".container", vnode.children)
         ];
