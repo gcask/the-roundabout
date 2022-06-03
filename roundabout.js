@@ -399,8 +399,7 @@ const App = {
         return [
             m("nav.navbar", [
                 m(".navbar-brand", [
-                    m(".navbar-item", "The Roundabout"),
-                    
+                    m(".navbar-item", [m("figure.image", m("img", {'src': './logo.png'})), m("span", " The Roundabout")]),
                     m("a.navbar-burger" + (vnode.state.navbarExpanded ? ".is-active" : ""), {'data-target': 'navbarMenu', onclick: function() { 
                         vnode.state.navbarExpanded = !vnode.state.navbarExpanded;
                     }}, [ m("span"), m("span"), m("span") ])
