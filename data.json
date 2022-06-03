@@ -80,6 +80,10 @@
         {
             "pairs": [["gcask", "Gerwulf"], ["Srezic", "StabbAmonte"]],
             "score": [1, 2]
+        },
+        {
+            "pairs": [["gcask", "Gerwulf"], ["Srezic", "Shreebz"]],
+            "score": [0, 2]
         }
     ]
 }
