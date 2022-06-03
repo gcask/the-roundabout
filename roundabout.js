@@ -22,6 +22,10 @@ function showPlayer(player) {
     return State.isHighlighted(player) ? m("mark", m("strong.is-uppercase", player)) : player;
 };
 
+function teamName(team) {
+    return team["name"] || ["Team ", showPlayer(team.members[0])];
+}
+
 const trophyIcon = () => m.trust("&#x1F3C6;");
 const zapIcon = () => m.trust("&#x26A1;");
 const medalIcon = () => m.trust("&#x1F3C5;");
@@ -36,7 +40,7 @@ const Standings = {
         // Each row:
         // <Team players> <1s> <2s> <3s> <Total>
         // Sort by total.
-        let team_scores = State.teams.map(t => { return { members: t.members, ones: 0, twos: 0, threes: 0, total: function () { return this.ones + this.twos + this.threes; } }; });
+        let team_scores = State.teams.map(t => { return { name: t.name, members: t.members, ones: 0, twos: 0, threes: 0, total: function () { return this.ones + this.twos + this.threes; } }; });
         for (const round of State.ones) {
             for (const match of round) {
                 if ('score' in match) {
@@ -99,7 +103,7 @@ const Standings = {
             m("table.table.is-striped.is-hoverable.is-fullwidth", [
                 m("thead",
                     m("tr", [
-                        m("th", { colspan: 4 }, "Team"),
+                        m("th", {"colspan": 4}, "Team"),
                         m("th.has-text-right", "1v1"),
                         m("th.has-text-right", "2v2"),
                         m("th.has-text-right", "3v3"),
@@ -107,8 +111,8 @@ const Standings = {
                     ])
                 ),
                 m("tbody", team_scores.map((team_score, i) => m("tr",
-                    m("td", (i == 0) ? m("strong", trophyIcon(), (i + 1)) : (i + 1)),
-                    team_score.members.map(x => m("td", showPlayer(x))),
+                    m("td", (i == 0) ? m("strong", trophyIcon(), teamName(team_score)) :  teamName(team_score)),
+                    team_score.members.map(x => m("td.text-small", showPlayer(x))),
                     m("td.has-text-right", i == best1v1Idx && team_score.ones > 0 ? m("strong", medalIcon(), team_score.ones) : team_score.ones),
                     m("td.has-text-right", i == best2v2Idx && team_score.twos > 0 ? m("strong", medalIcon(), team_score.twos) : team_score.twos),
                     m("td.has-text-right", i == best3v3Idx && team_score.threes > 0 ? m("strong", medalIcon(), team_score.threes) : team_score.threes),
@@ -123,7 +127,7 @@ const Standings = {
 const Team = {
     view: function (vnode) {
         return m(".card.team", [
-            m("header.card-header", m("h2.card-header-title", ["Team ", showPlayer(vnode.attrs.members[0])])),
+            m("header.card-header", m("h2.card-header-title", teamName(vnode.attrs))),
             m("ul.card-content", vnode.attrs.members.map(x => m("li", showPlayer(x)))),
             m(".card-footer")
         ]);
@@ -153,11 +157,11 @@ const Threes = {
                     m("thead",
                         m("tr", [
                             m("th"),
-                            all_but_last_teams.map(t => m("th", ["Team ", showPlayer(t.members[0])]))
+                            all_but_last_teams.map(t => m("th", teamName(t)))
                         ])
                     ),
                     m("tbody", all_but_first_teams.map((t, row) => m("tr", [
-                        m("th", ["Team ", showPlayer(t.members[0])]),
+                        m("th", teamName(t)),
                         all_but_last_teams.map((t, col) => m("td", { "class": row < col ? "has-background-grey" : "" }))
                     ])))
                 ])
@@ -178,7 +182,7 @@ const Twos = {
                     m("thead",
                         m("tr", [
                             m("th", { colspan: 2 }),
-                            all_but_last_teams.map(t => m("th.has-text-centered", { colspan: 3 }, ["Team ", showPlayer(t.members[0])]))
+                            all_but_last_teams.map(t => m("th.has-text-centered", { colspan: 3 }, teamName(t)))
                         ]),
                         m("tr", [
                             m("th", { colspan: 2 }),
@@ -190,7 +194,7 @@ const Twos = {
                         const player_a = t.members[p[0]];
                         const player_b = t.members[p[1]];
                         if (i == 0) {
-                            cells.push(m("th", { rowspan: 3 }, ["Team ", showPlayer(player_a)]));
+                            cells.push(m("th", { rowspan: 3 }, teamName(t)));
                         }
 
                         cells.push(m("th", [showPlayer(player_a), " ", showPlayer(player_b)]));
