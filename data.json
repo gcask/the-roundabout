@@ -85,6 +85,10 @@
         {
             "pairs": [["gcask", "Gerwulf"], ["Srezic", "Shreebz"]],
             "score": [0, 2]
+        },
+        {
+            "pairs": [["BlackStout", "gcask"], ["StabbAmonte", "Shreebz"]],
+            "score": [0, 2]
         }
     ]
 }
